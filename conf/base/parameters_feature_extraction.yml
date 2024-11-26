@@ -1,0 +1,26 @@
+feature_extraction:
+  plot_n_features: 10
+  extractor: microspeech_extractor
+  params:
+    sample_rate: 16000
+    window_size_ms: 46
+    window_stride_ms: 21
+    window_scaling_bits: 12
+    filter_bank_number_of_channels: 32
+    filter_bank_lower_band_limit_hz: 125.0
+    filter_bank_upper_band_limit_hz: 7500.0
+    filter_bank_alignment: 4
+    filter_bank_channel_block_size: 4
+    filter_bank_post_scaling_bits: 6
+    filter_bank_spectral_subtraction_bits: 14
+    filter_bank_smoothing_bits: 10
+    filter_bank_even_smoothing: 0.015
+    filter_bank_odd_smoothing: 0.08
+    filter_bank_min_signal_remaining: 0.05
+    filter_bank_clamping: false
+    pcan_strength: 0.95
+    pcan_offset: 10.0
+    pcan_gain_bits: 21
+    pcan_smoothing_bits: 10
+    legacy_output_scaling: 25.6
+    use_float_output: true

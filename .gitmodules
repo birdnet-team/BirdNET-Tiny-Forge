@@ -1,0 +1,3 @@
+[submodule "src/birdnet_tiny_forge/templates/BirdNET-ESP32S3-example"]
+	path = src/birdnet_tiny_forge/templates/korvo2_bird_logger
+	url = git@github.com:birdnet-team/BirdNET-Tiny-Forge-Korvo2-template.git

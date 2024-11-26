@@ -1,0 +1,15 @@
+model_training:
+  n_epochs: 200
+  model:
+    type: predefined
+    name: mobilenet_slimmed
+    compile_params:
+      optimizer: adam
+      loss:
+        class_name: SparseCategoricalCrossentropy
+        config:
+          from_logits: false
+      metrics:
+        - accuracy
+    params:
+      dropout: 0.3

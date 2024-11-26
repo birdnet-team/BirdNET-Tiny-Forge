@@ -1,0 +1,5 @@
+data_preprocessing:
+  slice_duration_ms: 1000
+  slice_subtype: "PCM_16"
+  slice_sample_rate: 16000
+  plot_n_slices: 3

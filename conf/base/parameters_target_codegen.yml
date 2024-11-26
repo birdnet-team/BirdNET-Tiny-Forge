@@ -1,0 +1,7 @@
+target_codegen:
+  target: "korvo2_bird_logger"
+  cache_build: true  # if true, code is built in .cache folder, so it's not rebuilt from scratch every time
+  toolchain_params:
+    port: /dev/ttyUSB0
+  params:
+    tensor_arena_size: 150_000

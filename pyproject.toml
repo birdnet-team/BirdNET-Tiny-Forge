@@ -1,0 +1,112 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+requires-python = ">=3.10,<3.12"
+name = "birdnet-tiny-forge"
+description = "BirdNET-Tiny Forge simplifies the training of BirdNET-Tiny models and their deployment on embedded devices."
+readme = "README.md"
+version = "0.0.1"
+authors = [
+  {name = "Giovanni Carmantini ", email = "giovanni@fold.ai"},
+  {name = "Can Isik", email = "can@fold.ai"},
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+ipython = ">=8.10"
+jupyterlab = ">=3.0"
+notebook = "*"
+kedro = "~=0.19.9"
+kedro-datasets = { version = ">=3.0", extras = ["pandas-csvdataset", "pandas-parquetdataset", "plotly-plotlydataset", "plotly-jsondataset", "matplotlib-matplotlibwriter"] }
+scikit-learn = "~=1.5.1"
+seaborn = "~=0.12.1"
+librosa = ">=0.10.2.post1,<0.11.0"
+plotly = ">=5.24.1,<6.0.0"
+tensorflow-cpu = "==2.18.0"
+tqdm = "^4.67.0"
+keras-tuner = "^1.4.7"
+keras = "^3.6.0"
+docker = "^7.1.0"
+nox = "^2024.10.9"
+numpy = "2.0.2"
+
+[tool.poetry.group.tflite-micro.dependencies]
+tflite-micro = { file = "tflite-micro/bazel-bin/python/tflite_micro/whl_dist/tflite_micro-0.dev20241031040012-py3-none-any.whl" }
+
+[tool.poetry.group.docs.dependencies]
+docutils = "<0.21"
+sphinx = ">=5.3,<7.3"
+sphinx_rtd_theme = "==2.0.0"
+nbsphinx = "==0.8.1"
+sphinx-autodoc-typehints = "==1.20.2"
+sphinx_copybutton = "==0.5.2"
+ipykernel = ">=5.3,<7.0"
+Jinja2 = "<3.2.0"
+myst-parser = ">=1.0,<2.1"
+sphinx-autobuild = "^2024.10.3"
+
+[tool.poetry.group.dev.dependencies]
+kedro-viz = ">=10.0.0"
+pytest-cov = "~=3.0"
+pytest-mock = ">=1.7.1,<2.0"
+pytest = "~=7.2"
+ruff = "~=0.1.8"
+pre-commit = "^4.0.1"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
+
+[tool.pytest.ini_options]
+#addopts = """
+#--cov-report term-missing \
+#--cov src/birdnet_tiny_forge -ra"""
+
+[tool.coverage.report]
+fail_under = 0
+show_missing = true
+exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+
+[tool.ruff]
+line-length = 120
+show-fixes = true
+
+[tool.ruff.lint]
+select = [
+    "F",   # Pyflakes
+    "W",   # pycodestyle
+    "E",   # pycodestyle
+    "I",   # isort
+    "UP",  # pyupgrade
+    "PL",  # Pylint
+    "T201", # Print Statement
+]
+ignore = [
+    "E501",    # Ruff format takes care of line-too-long
+    "PLR0913"  # Functions with > 5 arguments are quite common in data projects
+]
+
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.isort]
+profile = "black"
+
+[project.scripts]
+"tinyforge" = "birdnet_tiny_forge.__main__:main"
+
+[project.entry-points."kedro.hooks"]
+
+[tool.kedro]
+package_name = "birdnet_tiny_forge"
+project_name = "Birdnet-Tiny Forge"
+kedro_init_version = "0.19.9"
+tools = "['Linting', 'Testing', 'Custom Logging', 'Documentation', 'Data Structure', 'Kedro Viz']"
+example_pipeline = "True"
+source_dir = "src"
+
+[tool.kedro_telemetry]
+project_id = "7598756b60fb44d1958dc54809e5afcc"

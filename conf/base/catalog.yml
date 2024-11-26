@@ -1,0 +1,80 @@
+audio_clips:
+  type: partitions.PartitionedDataset
+  path: "data/01_raw/audio_clips_all"
+  dataset: birdnet_tiny_forge.datasets.WavDataset
+
+audio_slices:
+  type: partitions.PartitionedDataset
+  path: "data/03_primary/audio_slices"
+  overwrite: true
+  dataset:
+    type: birdnet_tiny_forge.datasets.WavDataset
+
+audio_slices_metadata:  # includes labels
+  type: pandas.CSVDataset
+  filepath: "data/03_primary/audio_slices_metadata.csv"
+
+labels_dict:
+  type: json.JSONDataset
+  filepath: "data/03_primary/labels.json"
+
+features:
+  type: MemoryDataset
+  copy_mode: "copy"
+
+model_input:
+  type: birdnet_tiny_forge.datasets.BatchedParquetDataset
+  filepath: "data/05_model_input/model_input.parquet"
+
+model_pre_search:
+  type: MemoryDataset
+  copy_mode: "assign"  # tf graph doesn't play well with pickle
+
+model_post_search:
+  type: MemoryDataset
+  copy_mode: "assign"  # tf graph doesn't play well with pickle
+
+model_trained:
+  type: birdnet_tiny_forge.datasets.KerasModelDataset
+  filepath: "data/06_models/model_trained.keras"
+
+training_metrics_plot:
+  type: plotly.JSONDataset
+  filepath: "data/08_reporting/training_metrics_plot.json"
+  versioned: true
+
+confusion_matrix_plot:
+  type: matplotlib.MatplotlibWriter
+  filepath: "data/08_reporting/confusion_matrix_plot.png"
+  versioned: true
+
+tf_datasets:
+  type: MemoryDataset
+  copy_mode: "copy"
+
+reference_dataset:
+  type: birdnet_tiny_forge.datasets.TFDataset
+  filepath: "data/05_model_input/reference_dataset"
+
+audio_slices_plot:
+  type: plotly.JSONDataset
+  filepath: "data/08_reporting/audio_slices_plot.json"
+  versioned: true
+
+splits_info_plot:
+  type: plotly.JSONDataset
+  filepath: "data/08_reporting/splits_info_plot.json"
+  versioned: true
+
+features_plot:
+  type: plotly.JSONDataset
+  filepath: "data/08_reporting/features_plot.json"
+  versioned: true
+
+codegen_bundle:
+  type: birdnet_tiny_forge.datasets.TarDataset
+  filepath: "data/09_codegen/target_code.tar.gz"
+
+build_bundle:
+  type: birdnet_tiny_forge.datasets.TarDataset
+  filepath: "data/10_binaries/target_binaries.tar.gz"
