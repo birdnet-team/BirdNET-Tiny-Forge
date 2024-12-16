@@ -32,10 +32,6 @@ autodoc_mock_imports = [
 myst_enable_extensions = [
     "html_image",  # Enable HTML image parsing
 ]
-root_img_dir = project_root / 'img'
-build_img_dir = docs_root / 'build' / 'img'
-build_img_dir.parent.mkdir(parents=True, exist_ok=True)
-shutil.copytree(root_img_dir, build_img_dir, dirs_exist_ok=True)
 
 html_copy_source = True
 templates_path = ['_templates']

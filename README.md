@@ -2,7 +2,7 @@
 [![Powered by Kedro](https://img.shields.io/badge/powered_by-kedro-ffc900?logo=kedro)](https://kedro.org)
 
 <p align="center">
-<img src="img/birdnet-tiny-forge.png" width="128" alt="BirdNET-Tiny logo, an 8-bit image of a bird on an anvil">
+<img src="https://raw.githubusercontent.com/birdnet-team/BirdNET-Tiny-Forge/refs/heads/master/img/birdnet-tiny-forge.png" width="128" alt="BirdNET-Tiny logo, an 8-bit image of a bird on an anvil">
 </p>
 
 BirdNET-Tiny Forge simplifies the training of BirdNET-Tiny models and their deployment on embedded devices.
@@ -13,8 +13,11 @@ and [fold ecosystemics](https://fold.eco).
 
 <div align="center">
 <a href="https://birdnet.cornell.edu/"><img src="https://raw.githubusercontent.com/kahst/BirdNET-Analyzer/refs/heads/main/docs/assets/img/birdnet_logo.png" width="80px" alt="BirdNET logo">
-<a href="https://fold.eco"><img src="img/fold-ecosystemics.png" height="80px" alt="fold ecosystemics logo"></a>
+<a href="https://fold.eco"><img src="https://raw.githubusercontent.com/birdnet-team/BirdNET-Tiny-Forge/refs/heads/master/img/fold-ecosystemics.png" height="80px" alt="fold ecosystemics logo"></a>
 </div>
+
+## Documentation
+Please find the documentation [here](https://birdnet-tiny-forge.readthedocs.io/en/latest/).
 
 ## Supported devices
 
