@@ -12,7 +12,7 @@ build:
     post_install:
       # Install only dependencies including docs
       # https://python-poetry.org/docs/managing-dependencies/#dependency-groups
-      - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --with docs
+      - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --with docs --without tflite-micro
 
 sphinx:
   configuration: docs/source/conf.py

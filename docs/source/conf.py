@@ -27,6 +27,7 @@ autodoc_mock_imports = [
     'keras',
     'keras_tuner',
     'tensorflow',
+    'tflite_micro'
 ]
 myst_enable_extensions = [
     "html_image",  # Enable HTML image parsing
