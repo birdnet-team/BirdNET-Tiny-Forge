@@ -9,18 +9,18 @@ birdnet\_tiny\_forge.targets package
 Submodules
 ----------
 
-birdnet\_tiny\_forge.targets.ESP32S3BirdLogger module
------------------------------------------------------
-
-.. automodule:: birdnet_tiny_forge.targets.ESP32S3BirdLogger
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 birdnet\_tiny\_forge.targets.base module
 ----------------------------------------
 
 .. automodule:: birdnet_tiny_forge.targets.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+birdnet\_tiny\_forge.targets.korvo2\_bird\_logger module
+--------------------------------------------------------
+
+.. automodule:: birdnet_tiny_forge.targets.korvo2_bird_logger
    :members:
    :undoc-members:
    :show-inheritance:
