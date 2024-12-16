@@ -3,15 +3,17 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [project]
-requires-python = ">=3.10,<3.12"
 name = "birdnet-tiny-forge"
-description = "BirdNET-Tiny Forge simplifies the training of BirdNET-Tiny models and their deployment on embedded devices."
-readme = "README.md"
+
+[tool.poetry]
+name = "birdnet-tiny-forge"
 version = "0.0.1"
+description = "BirdNET-Tiny Forge simplifies the training of BirdNET-Tiny models and their deployment on embedded devices."
 authors = [
-  {name = "Giovanni Carmantini ", email = "giovanni@fold.ai"},
-  {name = "Can Isik", email = "can@fold.ai"},
+    "Giovanni Carmantini <giovanni@fold.ai>",
+    "Can Isik <can@fold.ai>"
 ]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
