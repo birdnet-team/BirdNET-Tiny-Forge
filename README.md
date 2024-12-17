@@ -12,7 +12,7 @@ BirdNET-Tiny Forge is a collaboration between
 and [fold ecosystemics](https://fold.eco).
 
 <div align="center">
-<a href="https://birdnet.cornell.edu/"><img src="https://raw.githubusercontent.com/kahst/BirdNET-Analyzer/refs/heads/main/docs/assets/img/birdnet_logo.png" width="80px" alt="BirdNET logo">
+<a href="https://birdnet.cornell.edu/"><img src="https://raw.githubusercontent.com/kahst/BirdNET-Analyzer/refs/heads/main/docs/assets/img/birdnet_logo.png" width="80px" alt="BirdNET logo"></a>
 <a href="https://fold.eco"><img src="https://raw.githubusercontent.com/birdnet-team/BirdNET-Tiny-Forge/refs/heads/master/img/fold-ecosystemics.png" height="80px" alt="fold ecosystemics logo"></a>
 </div>
 
