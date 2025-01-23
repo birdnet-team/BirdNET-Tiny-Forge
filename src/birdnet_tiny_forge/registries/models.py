@@ -15,7 +15,7 @@
 
 """Registry for models"""
 
-from birdnet_tiny_forge.models import MobilenetSlimmed, Plaything
+from birdnet_tiny_forge.models import MobilenetSlimmed
 from birdnet_tiny_forge.registries.base import RegistryBase
 
 
