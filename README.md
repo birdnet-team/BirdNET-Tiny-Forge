@@ -26,7 +26,6 @@ Please find the documentation [here](https://birdnet-tiny-forge.readthedocs.io/e
 - [ESP32-S3-Korvo-2 V3.0](https://docs.espressif.com/projects/esp-adf/en/latest/design-guide/dev-boards/user-guide-esp32-s3-korvo-2.html)
 
 ### Planned
-- ADI MAX78000
 - BirdWatcher PUC
 
 
@@ -48,7 +47,7 @@ This project is in early development stage, and not recommended for production u
 
 ```bash
 # Download and build patched version of tflite (it makes custom signal ops available, and pins the tensorflow version to the one used in this repo)
-./build_tflite.sh
+./build_tflite.sh tflite-micro
 
 # Project uses poetry for python dependency management
 pip install poetry
@@ -56,6 +55,36 @@ pip install poetry
 # Finally, install all deps
 poetry install
 ```
+
+## Prepare your data
+### Xenocanto
+If using [xeno-canto](https://xeno-canto.com) data to train your network, please make sure to review its [terms](https://xeno-canto.org/about/terms) to check your usage is compatible with them.
+
+- Please create an account on https://xeno-canto.com, which grants you the API key we will use to download bird recordings to train our network.
+
+- Create a `species.txt` file, where each line contains the scientific name of a species you want to train on.
+
+- Call `xc-download --api-key <your API key> --species-file <path to species file> --n-recs <number of recordings per species to download>`
+
+### AudioSet
+
+- Create a `audioset.txt` file, with each line being a class in AudioSet you wish to download data for.
+- Run `audioset-download --labels-file <path to audioset labels> --limit <max number of files to download per class>`
+
+### Custom data
+If you have your own recordings you'd like to train on, first isolate the bird calls you're interested in, creating audio clips. Place your clips in `data/01_raw/audio_clips`, with the following structure:
+
+```
+audio_clips
+├── <label, e.g. Apteryx mantelli>
+│  ├── <recording, e.g. abc123.wav>
+│  ├── ...
+├── <label, e.g. Apteryx owenii>
+├── ...
+```
+
+## Run the pipeline
+
 
 ## Development setup
 
