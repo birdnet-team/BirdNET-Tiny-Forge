@@ -33,6 +33,8 @@ keras = "^3.6.0"
 docker = "^7.1.0"
 nox = "^2024.10.9"
 numpy = "2.0.2"
+audioset-download = "^1.1"
+spec-augment = "^0.0.3"
 
 [tool.poetry.group.tflite-micro.dependencies]
 tflite-micro = { file = "tflite-micro/bazel-bin/python/tflite_micro/whl_dist/tflite_micro-0.dev20241031040012-py3-none-any.whl" }
@@ -98,7 +100,9 @@ docstring-code-format = true
 profile = "black"
 
 [project.scripts]
-"tinyforge" = "birdnet_tiny_forge.__main__:main"
+tinyforge = "birdnet_tiny_forge.__main__:main"
+xc-download = "birdnet_tiny_forge.scripts.xc_download:xc_download"
+audioset-download = "birdnet_tiny_forge.scripts.as_download:audioset_download"
 
 [project.entry-points."kedro.hooks"]
 
