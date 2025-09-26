@@ -25,7 +25,7 @@ from birdnet_tiny_forge.pipelines.data_preprocessing.nodes import (
     plot_slices_sample,
     plot_splits_info,
     save_labels_dict,
-    slices_make_canonical,
+    slices_make_canonical, slices_filter_short,
 )
 
 
@@ -48,8 +48,17 @@ def create_pipeline(**kwargs) -> Pipeline:
                     "sample_rate": "params:data_preprocessing.slice_sample_rate",
                     "subtype": "params:data_preprocessing.slice_subtype",
                 },
-                outputs="audio_slices",
+                outputs="audio_slices_canonical",
                 name="slices_make_canonical",
+            ),
+            node(
+                func=slices_filter_short,
+                inputs={
+                    "audio_slices": "audio_slices_canonical",
+                    "audio_slice_duration_ms": "params:data_preprocessing.slice_duration_ms",
+                },
+                outputs="audio_slices",
+                name="slices_filter_short",
             ),
             node(
                 func=plot_slices_sample,

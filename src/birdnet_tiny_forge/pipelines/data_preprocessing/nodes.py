@@ -23,11 +23,14 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from sklearn.model_selection import train_test_split
 
-from birdnet_tiny_forge.datasets.wav_dataset import WavItem
+from birdnet_tiny_forge.datasets.audio_dataset import WavItem
+import logging
 
 MAX_PLOT_SLICES = 20  # just a sensible max so we don't try to plot thousands
 
+logger = logging.getLogger("tinyforge")
 
 def _extract_loudest_slice_do_one(loader, audio_slice_duration_ms):
     """Find the max of the audio, then return a slice of duration audio_slice_duration_ms centred on the max.
@@ -110,6 +113,28 @@ def slices_make_canonical(audio_slices, sample_rate, subtype):
     return out_dict
 
 
+def slices_filter_short(audio_slices, audio_slice_duration_ms):
+    """Filter out slices that are smaller than audio_slice_duration_ms
+    (and filter out files that can't be opened)
+
+    :param audio_slices: a dictionary of callables returning sliced audio
+    :param audio_slice_duration_ms:
+    """
+    out_dict = {}
+    for path, loader in audio_slices.items():
+        try:
+            wav_item: WavItem = loader()
+        except Exception as e:
+            logger.error(e)
+            continue
+        expected_samples = wav_item.sample_rate * audio_slice_duration_ms / 1000
+        if wav_item.data.shape[0] < expected_samples:
+            logger.info(f"Dropping clip {path}: too short")
+            continue
+        out_dict[path] = loader
+    return out_dict
+
+
 def plot_slices_sample(audio_slices, n_slices):
     """Plot a few slices of data as a plotly figure
 
@@ -142,7 +167,7 @@ def extract_metadata(audio_slices):
     and a label inferred from its path.
 
     :param audio_slices: a dictionary of callables returning sliced audio
-    :return:
+    :return: dictionary of callables returning sliced audio
     """
     out = []
     for batch_id, slice_loader in audio_slices.items():
@@ -151,19 +176,28 @@ def extract_metadata(audio_slices):
     return pd.DataFrame(out)
 
 
-def decide_splits(df, validation_split=0.5):
-    """Given dataset metadata (and specifically, each audio slice originating path),
-    populate the split information. Part of the test split is further broken off into a validation split,
-    the ratio being controlled by the validation_split parameter.
+def decide_splits(df, test_size=0.2, val_size=0.1, random_state=42):
+    """Given dataset metadata populate the split information.
 
     :param df: metadata dataframe
-    :param validation_split: which ratio of the test split to further break off into a validation split
+    :param test_size: fraction of dataset used for testing
+    :param val_size: fraction of dataset used for validation
     :return: metadata dataframe containing split info
     """
-    df["split"] = df["path"].apply(lambda x: Path(x).parents[1].name)
-    test_df = df[df["split"] == "test"]
-    val_idx = test_df.sample(frac=validation_split).index
-    df.loc[val_idx, "split"] = "validation"
+    train_df, temp_df = train_test_split(
+        df,
+        test_size=(test_size + val_size),
+        random_state=random_state
+    )
+    val_relative_size = val_size / (test_size + val_size)
+    test_df, val_df = train_test_split(
+        temp_df,
+        test_size=val_relative_size,
+        random_state=random_state
+    )
+    df.loc[train_df.index, "split"] = "train"
+    df.loc[test_df.index, "split"] = "test"
+    df.loc[val_df.index, "split"] = "validation"
     return df
 
 
