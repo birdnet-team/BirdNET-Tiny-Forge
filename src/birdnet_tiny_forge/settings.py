@@ -30,17 +30,6 @@ https://docs.kedro.org/en/stable/kedro_project_setup/settings.html."""
 from pathlib import Path
 
 from kedro.io import KedroDataCatalog
-from kedro_viz.integrations.kedro.sqlite_store import SQLiteStore
-
-# Class that manages storing KedroSession data.
-SESSION_STORE_CLASS = SQLiteStore
-
-# Setup for Experiment Tracking
-# The SQLite DB required for experiment tracking is stored by default
-# (supported from python >= 3.9 and Kedro-Viz 9.2.0) in the .viz folder
-# of your project. To store it in another directory, provide the keyword argument
-# `SESSION_STORE_ARGS` to pass to the `SESSION_STORE_CLASS` constructor.
-SESSION_STORE_ARGS = {"path": str(Path(__file__).parents[2])}
 
 # Directory that holds configuration.
 # CONF_SOURCE = "conf"
