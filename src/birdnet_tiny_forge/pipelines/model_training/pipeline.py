@@ -13,13 +13,11 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-"""This pipeline performs a model hyperparameter / architecture search if so specified in configuration,
-or loads a pre-defined architecture. It then trains and tests the model."""
+"""This pipeline trains and tests the model."""
 
 from kedro.pipeline import Pipeline, node, pipeline
 
 from birdnet_tiny_forge.pipelines.model_training.nodes import (
-    do_hyperparameter_search,
     get_class_weight,
     get_confusion_matrix,
     get_model,
@@ -48,30 +46,19 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=get_model,
                 inputs={
-                    "search_type": "params:model_training.model.type",
                     "model": "params:model_training.model.name",
                     "input_shape": "features_shape",
                     "params": "params:model_training.model.params",
                     "compile_params": "params:model_training.model.compile_params",
                     "labels_dict": "labels_dict",
                 },
-                outputs="model_pre_search",
+                outputs="model",
                 name="get_model",
-            ),
-            node(
-                func=do_hyperparameter_search,
-                inputs={
-                    "model": "model_pre_search",
-                    "datasets": "tf_datasets",
-                    "class_weight": "class_weight",
-                },
-                outputs="model_post_search",
-                name="do_hyperparameter_search",
             ),
             node(
                 func=train_model,
                 inputs={
-                    "model": "model_post_search",
+                    "model": "model",
                     "datasets": "tf_datasets",
                     "class_weight": "class_weight",
                     "n_epochs": "params:model_training.n_epochs",

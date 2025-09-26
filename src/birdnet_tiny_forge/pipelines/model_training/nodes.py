@@ -23,8 +23,6 @@ from keras import Model, losses
 from plotly.subplots import make_subplots
 from sklearn.metrics import ConfusionMatrixDisplay
 
-from birdnet_tiny_forge.hypersearch.base import HypersearchBase
-from birdnet_tiny_forge.registries import HypersearchRegistry, ModelsRegistry
 
 
 def make_tf_datasets(
@@ -65,36 +63,14 @@ def get_class_weight(data, labels_dict):
     return class_weight
 
 
-def get_model(search_type, model, input_shape, compile_params, params, labels_dict):
+def get_model(model, input_shape, compile_params, params, labels_dict):
     loss_config = compile_params.pop("loss")
     loss = losses.get(loss_config)
-
-    if search_type == "predefined":
-        model_factory = ModelsRegistry.get_item(model)
-        model = model_factory.create(class_count=len(labels_dict), input_shape=input_shape, **params)
-        model.compile(loss=loss, **compile_params)
-        return model
-    if search_type == "hypersearch":
-        hs_cls: type[HypersearchBase] = HypersearchRegistry.get_item(model)
-        return hs_cls(
-            class_count=len(labels_dict),
-            input_shape=input_shape,
-            loss=loss,
-            **compile_params,
-            **params,
-        )
-    raise ValueError(f"Unknown search type {search_type}.")
-
-
-def do_hyperparameter_search(model, datasets, class_weight):
-    if isinstance(model, Model):  # normal model, just return it as-is
-        return model
-    assert isinstance(model, HypersearchBase)
-    hypermodel: HypersearchBase = model
-    train_ds = datasets["train"].cache().shuffle(10000).prefetch(tf.data.AUTOTUNE)
-    valid_ds = datasets["test"].cache().prefetch(tf.data.AUTOTUNE)
-    actual_model = hypermodel.run_search(train_ds, valid_ds, class_weight=class_weight)
-    return actual_model
+    metrics_ = [metrics.get(x) for x in compile_params.pop('metrics', [])]
+    model_factory = ModelsRegistry.get_item(model)
+    model = model_factory.create(class_count=len(labels_dict), input_shape=input_shape, **params)
+    model.compile(loss=loss, metrics=metrics_, **compile_params)
+    return model
 
 
 def train_model(model, datasets, n_epochs, class_weight):

@@ -26,11 +26,7 @@ model_input:
   type: birdnet_tiny_forge.datasets.BatchedParquetDataset
   filepath: "data/05_model_input/model_input.parquet"
 
-model_pre_search:
-  type: MemoryDataset
-  copy_mode: "assign"  # tf graph doesn't play well with pickle
-
-model_post_search:
+model:
   type: MemoryDataset
   copy_mode: "assign"  # tf graph doesn't play well with pickle
 
