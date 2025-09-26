@@ -33,7 +33,12 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=make_tf_datasets,
-                inputs=["model_input", "labels_dict"],
+                inputs={
+                    "data": "model_input",
+                    "labels_dict": "labels_dict",
+                    "batch_size": "params:model_training.batch_size",
+                    "augm_params": "params:model_training.augmentation",
+                },
                 outputs=["tf_datasets", "reference_dataset", "features_shape"],
                 name="make_tf_datasets",
             ),

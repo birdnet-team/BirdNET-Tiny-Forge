@@ -14,36 +14,49 @@
 #   limitations under the License.
 
 """Nodes to be used in model training pipeline"""
-
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import tensorflow as tf
-from keras import Model, losses
+from keras import Model, losses, metrics
+from keras.src.utils import to_categorical
 from plotly.subplots import make_subplots
 from sklearn.metrics import ConfusionMatrixDisplay
 
 from birdnet_tiny_forge.models.base import checkpoint_session
+from birdnet_tiny_forge.pipelines.model_training.augmentation import make_augmentation_pipeline
+from birdnet_tiny_forge.registries import ModelsRegistry
+import logging
+
+
+logger = logging.getLogger("tinyforge")
 
 
 def make_tf_datasets(
     data: pd.DataFrame,
     labels_dict: dict[str, int],
+    augm_params,
     buffer_size=10000,
     seed=42,
-    tf_batch_size=32,
+    batch_size=32,
 ):
     datasets = {}
     features_shape = tuple(data["features_shape"][0])  # TODO: fix this ugliness
     assert data["features_shape"].apply(lambda x: tuple(x) == features_shape).all()
+    augm_pipe = make_augmentation_pipeline(**augm_params)
 
     for group, group_data in data.groupby("split"):
         # shape (tf backend): batches, rows, cols, channels
         features = np.array(group_data["features"].to_list()).reshape((-1, features_shape[0], features_shape[1], 1))
         int_labels = group_data["label"].apply(lambda x: labels_dict[x]).values
-        labels = int_labels
+        labels = to_categorical(int_labels)
         dataset = tf.data.Dataset.from_tensor_slices((features, labels))
-        dataset = dataset.shuffle(buffer_size=buffer_size, seed=seed).batch(tf_batch_size)
+        dataset = dataset.shuffle(buffer_size=buffer_size, seed=seed).batch(batch_size)
+        if group == "train":
+            dataset = dataset.map(
+                lambda x, y: (augm_pipe(x, training=True), y),
+                num_parallel_calls=tf.data.AUTOTUNE
+            )
         datasets[group] = dataset
 
     # TODO: formalize the split names and presence
@@ -91,46 +104,39 @@ def train_model(model, datasets, n_epochs, class_weight):
 
 def plot_training_metrics(training_history):
     metrics = training_history.history
-    fig = make_subplots(rows=1, cols=2, subplot_titles=("Loss", "Accuracy"))
-    fig.add_trace(
-        go.Scatter(x=training_history.epoch, y=metrics["loss"], name="loss"),
-        row=1,
-        col=1,
+    train_metrics = []
+    val_metrics = []
+    for metric in metrics:
+        if metric.startswith("val_"):
+            train_metric = metric.split("val_")[1]
+            if train_metric in metrics:
+                val_metrics.append(metric)
+                train_metrics.append(train_metric)
+
+    fig = make_subplots(
+        rows=len(train_metrics), cols=2, subplot_titles=list([y for x in train_metrics for y in [x, x]]),
+        shared_yaxes="rows", shared_xaxes="all"
     )
-    fig.add_trace(
-        go.Scatter(x=training_history.epoch, y=metrics["val_loss"], name="val_loss"),
-        row=1,
-        col=1,
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=training_history.epoch,
-            y=100 * np.array(metrics["accuracy"]),
-            name="accuracy",
-        ),
-        row=1,
-        col=2,
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=training_history.epoch,
-            y=100 * np.array(metrics["val_accuracy"]),
-            name="val_accuracy",
-        ),
-        row=1,
-        col=2,
-    )
-    fig.update_layout(showlegend=True)
-    fig.update_xaxes(title_text="Epoch", row=1, col=1)
-    fig.update_xaxes(title_text="Epoch", row=1, col=2)
-    fig.update_yaxes(title_text="Loss [CrossEntropy]", range=[0, None], row=1, col=1)
-    fig.update_yaxes(title_text="Accuracy [%]", range=[0, 100], row=1, col=2)
+    for i, train_col in enumerate(train_metrics, start=1):
+        fig.add_trace(
+            go.Scatter(y=metrics[train_col], name=train_col),
+            row=i,
+            col=1,
+        )
+        fig.add_trace(
+            go.Scatter(y=metrics[f"val_{train_col}"], name=f"val_{train_col}"),
+            row=i,
+            col=2,
+        )
+    fig.update_xaxes(title_text="Epoch", row=len(train_metrics), col=1)
+    fig.update_xaxes(title_text="Epoch", row=len(train_metrics), col=2)
+    fig.update_layout(showlegend=True, height=200 * len(train_metrics))
     return fig
 
 
 def test_model(model: Model, datasets: dict[str, tf.data.Dataset]):
     test_ds = datasets["test"].cache().prefetch(tf.data.AUTOTUNE)
-    y_true = np.concat(list(test_ds.map(lambda x, y: y).as_numpy_iterator()))
+    y_true = np.argmax(np.concat(list(test_ds.map(lambda x, y: y).as_numpy_iterator())), axis=1)
     preds = model.predict(test_ds)
     y_pred = np.argmax(preds, axis=1)
     return y_true, y_pred
