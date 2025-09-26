@@ -17,10 +17,10 @@ from birdnet_tiny_forge.datasets.batched_parquet_dataset import BatchedParquetDa
 from birdnet_tiny_forge.datasets.keras_model_dataset import KerasModelDataset
 from birdnet_tiny_forge.datasets.tar_dataset import TarDataset
 from birdnet_tiny_forge.datasets.tf_dataset import TFDataset
-from birdnet_tiny_forge.datasets.wav_dataset import WavDataset
+from birdnet_tiny_forge.datasets.audio_dataset import AudioDataset
 
 __all__ = [
-    "WavDataset",
+    "AudioDataset",
     "BatchedParquetDataset",
     "KerasModelDataset",
     "TarDataset",

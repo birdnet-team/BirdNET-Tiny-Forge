@@ -20,14 +20,14 @@ import numpy as np
 import pytest
 import soundfile as sf
 
-from birdnet_tiny_forge.datasets.wav_dataset import WavDataset, WavItem
+from birdnet_tiny_forge.datasets.wav_dataset import AudioDataset, WavItem
 
 TEST_FILE_PATH = Path(__file__).parent / "test_data" / "CantinaBand3.wav"
 
 
 class TestWavDataset:
     def test_load(self):
-        dataset = WavDataset(filepath=str(TEST_FILE_PATH))
+        dataset = AudioDataset(filepath=str(TEST_FILE_PATH))
         data, loaded_sr = dataset.load()
         stereo_n_channels = 2
         test_file_sample_rate = 22050
@@ -39,7 +39,7 @@ class TestWavDataset:
     def test_save(self, sr, subtype):
         n_frames = 100
         with tempfile.TemporaryDirectory() as tmp_dir:
-            dataset = WavDataset(
+            dataset = AudioDataset(
                 filepath=str(Path(tmp_dir) / "audio.wav"),
             )
             data = np.ones(n_frames)

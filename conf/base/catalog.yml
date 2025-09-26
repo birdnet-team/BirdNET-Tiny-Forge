@@ -1,14 +1,14 @@
 audio_clips:
   type: partitions.PartitionedDataset
-  path: "data/01_raw/audio_clips_all"
-  dataset: birdnet_tiny_forge.datasets.WavDataset
+  path: "data/01_raw/audio_clips"
+  dataset: birdnet_tiny_forge.datasets.AudioDataset
 
 audio_slices:
   type: partitions.PartitionedDataset
   path: "data/03_primary/audio_slices"
   overwrite: true
   dataset:
-    type: birdnet_tiny_forge.datasets.WavDataset
+    type: birdnet_tiny_forge.datasets.AudioDataset
 
 audio_slices_metadata:  # includes labels
   type: pandas.CSVDataset

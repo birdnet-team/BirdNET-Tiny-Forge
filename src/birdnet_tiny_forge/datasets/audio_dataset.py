@@ -35,7 +35,7 @@ class WavItem:
     subtype: str | None  # See soundfile documentation on subtype
 
 
-class WavDataset(AbstractDataset[ndarray, ndarray]):
+class AudioDataset(AbstractDataset[ndarray, ndarray]):
     def __init__(
         self,
         filepath: str,
@@ -73,7 +73,7 @@ class WavDataset(AbstractDataset[ndarray, ndarray]):
             return data.T, f.samplerate
 
     def save(self, out: WavItem) -> None:
-        save_path = get_filepath_str(self._filepath, self._protocol)
+        save_path = get_filepath_str(self._filepath.with_suffix(".wav"), self._protocol)
         with self._fs.open(save_path, mode="wb") as f:
             sf.write(
                 f,
