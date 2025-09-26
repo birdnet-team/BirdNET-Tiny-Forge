@@ -29,7 +29,7 @@ https://docs.kedro.org/en/stable/kedro_project_setup/settings.html."""
 
 from pathlib import Path
 
-from kedro.io import KedroDataCatalog
+from kedro.io import DataCatalog
 
 # Directory that holds configuration.
 # CONF_SOURCE = "conf"
@@ -52,4 +52,4 @@ CONFIG_LOADER_ARGS = {
 # from kedro.framework.context import KedroContext
 # CONTEXT_CLASS = KedroContext
 
-DATA_CATALOG_CLASS = KedroDataCatalog
+DATA_CATALOG_CLASS = DataCatalog
