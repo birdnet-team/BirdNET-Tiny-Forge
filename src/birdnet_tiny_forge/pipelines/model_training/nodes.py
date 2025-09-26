@@ -23,6 +23,7 @@ from keras import Model, losses
 from plotly.subplots import make_subplots
 from sklearn.metrics import ConfusionMatrixDisplay
 
+from birdnet_tiny_forge.models.base import checkpoint_session
 
 
 def make_tf_datasets(
@@ -76,7 +77,15 @@ def get_model(model, input_shape, compile_params, params, labels_dict):
 def train_model(model, datasets, n_epochs, class_weight):
     train_ds = datasets["train"].cache().shuffle(10000).prefetch(tf.data.AUTOTUNE)
     valid_ds = datasets["validation"].cache().prefetch(tf.data.AUTOTUNE)
-    history = model.fit(train_ds, validation_data=valid_ds, epochs=n_epochs, class_weight=class_weight)
+    with checkpoint_session() as checkpointer:
+        history = model.fit(
+            train_ds,
+            validation_data=valid_ds,
+            epochs=n_epochs,
+            class_weight=class_weight,
+            callbacks=[checkpointer]
+        )
+        model = checkpointer.get_best_checkpoint()
     return model, history
 
 
