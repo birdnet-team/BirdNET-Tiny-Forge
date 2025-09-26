@@ -1,15 +1,27 @@
 model_training:
-  n_epochs: 200
+  n_epochs: 150
+  batch_size: 64
+  augmentation:
+    mixup_alpha: 0.1
+    noise_stddev: 0.05
+    sa_freq_mask_max_width: 3
+    sa_time_mask_max_width: 15
+    sa_n_freq_mask: 2
+    sa_n_time_mask: 4
   model:
-    type: predefined
     name: mobilenet_slimmed
     compile_params:
       optimizer: adam
       loss:
-        class_name: SparseCategoricalCrossentropy
+        class_name: BinaryCrossentropy
         config:
           from_logits: false
       metrics:
-        - accuracy
+        - precision
+        - recall
+        - class_name: AUC
+          config:
+            name: "auc"
+            multi_label: true
     params:
       dropout: 0.3
