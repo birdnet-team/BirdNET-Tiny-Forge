@@ -14,13 +14,11 @@
 #   limitations under the License.
 
 from birdnet_tiny_forge.registries.feature_extraction import FeatureExtractorsRegistry
-from birdnet_tiny_forge.registries.hypersearch import HypersearchRegistry
 from birdnet_tiny_forge.registries.models import ModelsRegistry
 from birdnet_tiny_forge.registries.targets import BuildTargetsRegistry
 
 __all__ = [
     "FeatureExtractorsRegistry",
     "ModelsRegistry",
-    "HypersearchRegistry",
     "BuildTargetsRegistry",
 ]
